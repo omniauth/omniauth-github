@@ -27,6 +27,10 @@ module OmniAuth
         }
       end
 
+      extra do
+        {:user_hash => raw_info}
+      end
+
       def raw_info
         access_token.options[:mode] = :query
         @raw_info ||= access_token.get('/user').parsed
