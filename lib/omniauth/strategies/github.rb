@@ -28,7 +28,7 @@ module OmniAuth
       end
 
       extra do
-        {:user_hash => raw_info}
+        {:raw_info => raw_info}
       end
 
       def raw_info
