@@ -10,9 +10,9 @@ on the [GitHub Applications Page](https://github.com/account/applications).
       provider :github, ENV['GITHUB_KEY'], ENV['GITHUB_SECRET']
     end
 
-## Scopes
+### Scopes
 
-GitHub API v3 let you set scopes to provide granular access to different types of data: 
+GitHub API v3 lets you set scopes to provide granular access to different types of data: 
 
 	use OmniAuth::Builder do
       provider :github, ENV['GITHUB_KEY'], ENV['GITHUB_SECRET'], scope: "user,repo,gist"
