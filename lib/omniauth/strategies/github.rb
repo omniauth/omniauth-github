@@ -13,14 +13,14 @@ module OmniAuth
         super
       end
 
-      # Split the user's full name into first and last
-      if raw_info['name'] =~ /[a-zA-Z]+\s[a-zA-Z]+/
-        (first_name, last_name) = raw_info['name'].split(' ')
-      end
-      
       uid { raw_info['id'] }
 
       info do
+        # Split the user's full name into first and last
+        if raw_info['name'] =~ /[a-zA-Z]+\s[a-zA-Z]+/
+          (first_name, last_name) = raw_info['name'].split(' ')
+        end
+    
         {
           'nickname' => raw_info['login'],
           'email' => raw_info['email'],
