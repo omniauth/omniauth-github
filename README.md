@@ -2,7 +2,7 @@
 
 This is the official OmniAuth strategy for authenticating to GitHub. To
 use it, you'll need to sign up for an OAuth2 Application ID and Secret
-on the [GitHub Applications Page](https://github.com/account/applications).
+on the [GitHub Applications Page](https://github.com/settings/applications).
 
 ## Basic Usage
 
