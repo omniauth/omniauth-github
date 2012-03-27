@@ -16,10 +16,20 @@ module OmniAuth
       uid { raw_info['id'] }
 
       info do
+        # Split the user's full name into first and last
+        if raw_info['name'] =~ /[a-zA-Z]+\s[a-zA-Z]+/
+          (first_name, last_name) = raw_info['name'].split(' ')
+        end
+    
         {
           'nickname' => raw_info['login'],
           'email' => raw_info['email'],
           'name' => raw_info['name'],
+          'first_name' => first_name ||= '',
+          'last_name' => last_name ||= '',
+          'location' => raw_info['location'],
+          'description' => raw_info['bio'],
+          'image' => raw_info['avatar_url'],
           'urls' => {
             'GitHub' => "https://github.com/#{raw_info['login']}",
             'Blog' => raw_info['blog'],
