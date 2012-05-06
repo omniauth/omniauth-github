@@ -20,6 +20,7 @@ module OmniAuth
           'nickname' => raw_info['login'],
           'email' => raw_info['email'],
           'name' => raw_info['name'],
+          'image' => raw_info['avatar_url'],
           'urls' => {
             'GitHub' => "https://github.com/#{raw_info['login']}",
             'Blog' => raw_info['blog'],
