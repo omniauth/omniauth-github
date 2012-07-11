@@ -38,13 +38,18 @@ module OmniAuth
       end
 
       def email
-        raw_info['email'] || emails.first
+        raw_info['email'] || (email_access_allowed? ? emails.first : nil)
       end
 
       def emails
         access_token.options[:mode] = :query
         @emails ||= access_token.get('/user/emails').parsed
       end
+
+      def email_access_allowed?
+        options['scope'] && !(options['scope'] == 'public')
+      end
+
     end
   end
 end
