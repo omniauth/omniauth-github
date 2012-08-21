@@ -1,4 +1,5 @@
 require 'omniauth-oauth2'
+require 'pp'
 
 module OmniAuth
   module Strategies
@@ -15,9 +16,11 @@ module OmniAuth
       
       def authorize_params
         result=super.tap do |params|
-          params[:state]=request.params[:state] if request.params[:state].present?
+          if request.params['state'].present?
+            params[:state]=request.params['state']
+            session['omniauth.state']=params[:state]
+          end
         end
-        puts result
         result
       end
 
