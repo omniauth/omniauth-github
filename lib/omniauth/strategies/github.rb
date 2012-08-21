@@ -14,9 +14,11 @@ module OmniAuth
       end
       
       def authorize_params
-        super.tap do |params|
+        result=super.tap do |params|
           params[:state]=request.params[:state] if request.params[:state].present?
         end
+        puts result
+        result
       end
 
       uid { raw_info['id'] }
