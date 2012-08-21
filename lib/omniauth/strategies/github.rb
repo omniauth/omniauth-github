@@ -12,6 +12,12 @@ module OmniAuth
       def request_phase
         super
       end
+      
+      def authorize_params
+        super.tap do |params|
+          params[:state]=request.params[:state] if request.params[:state].present?
+        end
+      end
 
       uid { raw_info['id'] }
 
