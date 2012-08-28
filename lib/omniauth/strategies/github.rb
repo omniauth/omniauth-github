@@ -1,5 +1,4 @@
 require 'omniauth-oauth2'
-require 'pp'
 
 module OmniAuth
   module Strategies
