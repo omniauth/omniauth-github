@@ -47,7 +47,7 @@ module OmniAuth
       end
 
       def email_access_allowed?
-        options['scope'] && !(options['scope'] == 'public')
+        options['scope'] =~ /user/
       end
 
     end
