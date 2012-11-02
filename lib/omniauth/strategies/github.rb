@@ -12,6 +12,14 @@ module OmniAuth
       def request_phase
         super
       end
+      
+      def authorize_params
+        if request.params["scope"]
+          super.merge({:scope => request.params["scope"]})
+        else
+          super
+        end
+      end
 
       uid { raw_info['id'].to_s }
 
