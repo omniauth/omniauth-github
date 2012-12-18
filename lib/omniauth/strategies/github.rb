@@ -46,12 +46,19 @@ module OmniAuth
       end
 
       def email
-        raw_info['email'] || (email_access_allowed? ? emails.first : nil)
+        raw_info['email'] || primary_email
       end
 
+      def primary_email
+        primary = emails.find{|i| i['primary'] }
+        primary && primary['email'] || emails.first && emails.first['email']
+      end
+
+      # The new /user/emails API - http://developer.github.com/v3/users/emails/#future-response
       def emails
+        return [] unless email_access_allowed?
         access_token.options[:mode] = :query
-        @emails ||= access_token.get('/user/emails').parsed
+        @emails ||= access_token.get('/user/emails', :headers => { 'Accept' => 'application/vnd.github.v3' }).parsed
       end
 
       def email_access_allowed?
