@@ -25,24 +25,24 @@ describe OmniAuth::Strategies::GitHub do
       subject.should_not be_email_access_allowed
     end
 
-    it "should not allow email if scope is 'public'" do
-      subject.options['scope'] = 'public'
-      subject.should_not be_email_access_allowed
-    end
-
     it "should allow email if scope is user" do
       subject.options['scope'] = 'user'
       subject.should be_email_access_allowed
     end
 
-    it "should allow email if scope is scope is a bunch of stuff" do
-      subject.options['scope'] = 'user,public_repo,repo,delete_repo,gist'
+    it "should allow email if scope is a bunch of stuff including user" do
+      subject.options['scope'] = 'public_repo,user,repo,delete_repo,gist'
       subject.should be_email_access_allowed
     end
 
-    it "should assume email access allowed if scope is scope is something currently not documented " do
+    it "should not allow email if scope is other than user" do
+      subject.options['scope'] = 'repo'
+      subject.should_not be_email_access_allowed
+    end
+
+    it "should assume email access not allowed if scope is something currently not documented " do
       subject.options['scope'] = 'currently_not_documented'
-      subject.should be_email_access_allowed
+      subject.should_not be_email_access_allowed
     end
   end
 
