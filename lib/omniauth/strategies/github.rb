@@ -14,10 +14,12 @@ module OmniAuth
       end
       
       def authorize_params
-        if request.params["scope"]
-          super.merge({:scope => request.params["scope"]})
-        else
-          super
+        super.tap do |params|
+          %w[scope client_options].each do |v|
+            if request.params[v]
+              params[v.to_sym] = request.params[v]
+            end
+          end
         end
       end
 
@@ -42,7 +44,7 @@ module OmniAuth
 
       def raw_info
         access_token.options[:mode] = :query
-        @raw_info ||= access_token.get('/user').parsed
+        @raw_info ||= access_token.get('user').parsed
       end
 
       def email
@@ -58,7 +60,7 @@ module OmniAuth
       def emails
         return [] unless email_access_allowed?
         access_token.options[:mode] = :query
-        @emails ||= access_token.get('/user/emails', :headers => { 'Accept' => 'application/vnd.github.v3' }).parsed
+        @emails ||= access_token.get('user/emails', :headers => { 'Accept' => 'application/vnd.github.v3' }).parsed
       end
 
       def email_access_allowed?
