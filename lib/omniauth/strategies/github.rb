@@ -48,7 +48,7 @@ module OmniAuth
       end
 
       def email
-        raw_info['email'] || primary_email
+        (raw_info['email'].nil? || raw_info['email'].empty?) || primary_email
       end
 
       def primary_email
