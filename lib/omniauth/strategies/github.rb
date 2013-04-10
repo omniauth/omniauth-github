@@ -32,7 +32,7 @@ module OmniAuth
           'name' => raw_info['name'],
           'image' => raw_info['avatar_url'],
           'urls' => {
-            'GitHub' => "https://github.com/#{raw_info['login']}",
+            'GitHub' => raw_info['html_url'],
             'Blog' => raw_info['blog'],
           },
         }

@@ -132,4 +132,11 @@ describe OmniAuth::Strategies::GitHub do
     end
   end
 
+  context '#info.urls' do
+    it 'should use html_url from raw_info' do
+      subject.stub(:raw_info).and_return({ 'login' => 'me', 'html_url' => 'http://enterprise/me' })
+      subject.info['urls']['GitHub'].should == 'http://enterprise/me'
+    end
+  end
+
 end
