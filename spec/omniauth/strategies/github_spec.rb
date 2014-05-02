@@ -56,30 +56,30 @@ describe OmniAuth::Strategies::GitHub do
     end
   end
 
-  context "#email_access_allowed?" do
-    it "should not allow email if scope is nil" do
+  context "#user_access_allowed?" do
+    it "should not allow user if scope is nil" do
       subject.options['scope'].should be_nil
-      subject.should_not be_email_access_allowed
+      subject.should_not be_user_access_allowed
     end
 
-    it "should allow email if scope is user" do
+    it "should allow user if scope is user" do
       subject.options['scope'] = 'user'
-      subject.should be_email_access_allowed
+      subject.should be_user_access_allowed
     end
 
-    it "should allow email if scope is a bunch of stuff including user" do
+    it "should allow user if scope is a bunch of stuff including user" do
       subject.options['scope'] = 'public_repo,user,repo,delete_repo,gist'
-      subject.should be_email_access_allowed
+      subject.should be_user_access_allowed
     end
 
-    it "should not allow email if scope is other than user" do
+    it "should not allow user if scope is other than user" do
       subject.options['scope'] = 'repo'
-      subject.should_not be_email_access_allowed
+      subject.should_not be_user_access_allowed
     end
 
-    it "should assume email access not allowed if scope is something currently not documented " do
+    it "should assume user access not allowed if scope is something currently not documented " do
       subject.options['scope'] = 'currently_not_documented'
-      subject.should_not be_email_access_allowed
+      subject.should_not be_user_access_allowed
     end
   end
 
@@ -89,12 +89,12 @@ describe OmniAuth::Strategies::GitHub do
       subject.email.should eq('you@example.com')
     end
 
-    it "should return nil if there is no raw_info and email access is not allowed" do
+    it "should return nil if there is no raw_info and user access is not allowed" do
       subject.stub!(:raw_info).and_return({})
       subject.email.should be_nil
     end
 
-    it "should return the primary email if there is no raw_info and email access is allowed" do
+    it "should return the primary email if there is no raw_info and user access is allowed" do
       emails = [
         { 'email' => 'secondary@example.com', 'primary' => false },
         { 'email' => 'primary@example.com',   'primary' => true }
@@ -105,7 +105,7 @@ describe OmniAuth::Strategies::GitHub do
       subject.email.should eq('primary@example.com')
     end
 
-    it "should return the first email if there is no raw_info and email access is allowed" do
+    it "should return the first email if there is no raw_info and user access is allowed" do
       emails = [
         { 'email' => 'first@example.com',   'primary' => false },
         { 'email' => 'second@example.com',  'primary' => false }
@@ -129,6 +129,26 @@ describe OmniAuth::Strategies::GitHub do
       access_token.should_receive(:get).with('user/emails', :headers=>{"Accept"=>"application/vnd.github.v3"}).and_return(response)
       subject.options['scope'] = 'user'
       subject.emails.should eq(parsed_response)
+    end
+  end
+
+  context "#organizations" do
+    context "user access is allowed" do
+      before { subject.options['scope'] = 'user' }
+
+      it "should use relative paths" do
+        access_token.should_receive(:get).with('user/orgs', :headers=>{"Accept"=>"application/vnd.github.v3"}).and_return(response)
+        subject.organizations.should eq(parsed_response)
+      end
+    end
+
+    context "user access is not allowed" do
+      before { subject.options['scope'] = nil }
+
+      it "should not request the organizations" do
+        access_token.should_not_receive(:get).with('user/orgs', :headers=>{"Accept"=>"application/vnd.github.v3"})
+        subject.organizations.should eq([])
+      end
     end
   end
 

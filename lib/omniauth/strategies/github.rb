@@ -31,6 +31,7 @@ module OmniAuth
           'email' => email,
           'name' => raw_info['name'],
           'image' => raw_info['avatar_url'],
+          'organizations' => organization_names,
           'urls' => {
             'GitHub' => "https://github.com/#{raw_info['login']}",
             'Blog' => raw_info['blog'],
@@ -48,7 +49,7 @@ module OmniAuth
       end
 
       def email
-         (email_access_allowed?) ? primary_email : raw_info['email']
+         (user_access_allowed?) ? primary_email : raw_info['email']
       end
 
       def primary_email
@@ -58,13 +59,23 @@ module OmniAuth
 
       # The new /user/emails API - http://developer.github.com/v3/users/emails/#future-response
       def emails
-        return [] unless email_access_allowed?
+        return [] unless user_access_allowed?
         access_token.options[:mode] = :query
         @emails ||= access_token.get('user/emails', :headers => { 'Accept' => 'application/vnd.github.v3' }).parsed
       end
 
-      def email_access_allowed?
+      def user_access_allowed?
         options['scope'] =~ /user/
+      end
+
+      def organization_names
+        organizations.collect { |org| org['login'] }
+      end
+
+      def organizations
+        return [] unless user_access_allowed?
+        access_token.options[:mode] = :query
+        @organizations ||= access_token.get('user/orgs', :headers => { 'Accept' => 'application/vnd.github.v3' }).parsed
       end
 
     end
