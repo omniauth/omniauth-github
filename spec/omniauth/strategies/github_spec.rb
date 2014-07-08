@@ -72,8 +72,8 @@ describe OmniAuth::Strategies::GitHub do
       subject.should be_email_access_allowed
     end
 
-    it "should not allow email if scope is other than user" do
-      subject.options['scope'] = 'repo'
+    it "should not allow email if scope does not grant email access" do
+      subject.options['scope'] = 'repo,user:follow'
       subject.should_not be_email_access_allowed
     end
 
