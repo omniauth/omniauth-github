@@ -29,6 +29,8 @@ module OmniAuth
         {
           'nickname' => raw_info['login'],
           'email' => email,
+          'email_verified' => @email_verified || false,
+          'display_email' => raw_info['email'],
           'name' => raw_info['name'],
           'image' => raw_info['avatar_url'],
           'urls' => {
@@ -39,7 +41,7 @@ module OmniAuth
       end
 
       extra do
-        {:raw_info => raw_info}
+        {:raw_info => raw_info, :all_emails => emails}
       end
 
       def raw_info
@@ -48,12 +50,16 @@ module OmniAuth
       end
 
       def email
-         (email_access_allowed?) ? primary_email : raw_info['email']
+        (email_access_allowed?) ? primary_email : raw_info['email']
       end
 
       def primary_email
-        primary = emails.find{|i| i['primary'] }
-        primary && primary['email'] || emails.first && emails.first['email']
+        primary = emails.find { |i| i['primary'] }
+        if primary && primary['email']
+          @email_verified = primary['verified']
+          return primary['email']
+        end
+        emails.first && emails.first['email']
       end
 
       # The new /user/emails API - http://developer.github.com/v3/users/emails/#future-response
