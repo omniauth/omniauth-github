@@ -16,7 +16,9 @@ Gem::Specification.new do |gem|
   gem.version       = OmniAuth::GitHub::VERSION
 
   gem.add_dependency 'omniauth', '~> 1.0'
-  gem.add_dependency 'omniauth-oauth2', '~> 1.1'
+  # Nothing lower than omniauth-oauth2 1.1.1
+  # http://www.rubysec.com/advisories/CVE-2012-6134/
+  gem.add_dependency 'omniauth-oauth2', '>= 1.1.1', '< 2.0'
   gem.add_development_dependency 'rspec', '~> 2.7'
   gem.add_development_dependency 'rack-test'
   gem.add_development_dependency 'simplecov'
