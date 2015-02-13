@@ -7,6 +7,7 @@ Gem::Specification.new do |gem|
   gem.description   = %q{Official OmniAuth strategy for GitHub.}
   gem.summary       = %q{Official OmniAuth strategy for GitHub.}
   gem.homepage      = "https://github.com/intridea/omniauth-github"
+  gem.license       = "MIT"
 
   gem.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   gem.files         = `git ls-files`.split("\n")
