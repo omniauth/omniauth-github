@@ -12,7 +12,7 @@ module OmniAuth
       def request_phase
         super
       end
-      
+
       def authorize_params
         super.tap do |params|
           %w[scope client_options].each do |v|
@@ -48,7 +48,7 @@ module OmniAuth
       end
 
       def email
-         (email_access_allowed?) ? primary_email : raw_info['email']
+        (email_access_allowed?) ? primary_email : raw_info['email']
       end
 
       def primary_email
@@ -64,9 +64,11 @@ module OmniAuth
       end
 
       def email_access_allowed?
-        options['scope'] =~ /user/
+        return false unless options['scope']
+        email_scopes = ['user', 'user:email']
+        scopes = options['scope'].split(',')
+        (scopes & email_scopes).any?
       end
-
     end
   end
 end
