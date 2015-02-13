@@ -15,7 +15,7 @@ on the [GitHub Applications Page](https://github.com/settings/applications).
     provider :github, ENV['GITHUB_KEY'], ENV['GITHUB_SECRET'],
         {
           :client_options => {
-            :site => 'https://github.YOURDOMAIN.com/api/v3',
+            :site => 'https://github.YOURDOMAIN.com/',
             :authorize_url => 'https://github.YOURDOMAIN.com/login/oauth/authorize',
             :token_url => 'https://github.YOURDOMAIN.com/login/oauth/access_token',
           }
