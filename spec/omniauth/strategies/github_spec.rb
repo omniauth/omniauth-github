@@ -94,7 +94,7 @@ describe OmniAuth::Strategies::GitHub do
       subject.email.should be_nil
     end
 
-    it "should return the primary email if there is no raw_info and email access is allowed" do
+    it "should not return the primary email if there is no raw_info and email access is allowed" do
       emails = [
         { 'email' => 'secondary@example.com', 'primary' => false },
         { 'email' => 'primary@example.com',   'primary' => true }
@@ -102,10 +102,10 @@ describe OmniAuth::Strategies::GitHub do
       subject.stub!(:raw_info).and_return({})
       subject.options['scope'] = 'user'
       subject.stub!(:emails).and_return(emails)
-      subject.email.should eq('primary@example.com')
+      subject.email.should eq(nil)
     end
 
-    it "should return the first email if there is no raw_info and email access is allowed" do
+    it "should not return the first email if there is no raw_info and email access is allowed" do
       emails = [
         { 'email' => 'first@example.com',   'primary' => false },
         { 'email' => 'second@example.com',  'primary' => false }
@@ -113,7 +113,7 @@ describe OmniAuth::Strategies::GitHub do
       subject.stub!(:raw_info).and_return({})
       subject.options['scope'] = 'user'
       subject.stub!(:emails).and_return(emails)
-      subject.email.should eq('first@example.com')
+      subject.email.should eq(nil)
     end
   end
 
