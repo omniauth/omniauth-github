@@ -28,7 +28,7 @@ module OmniAuth
       info do
         {
           'nickname' => raw_info['login'],
-          'email' => email,
+          'email' => primary_email,
           'name' => raw_info['name'],
           'image' => raw_info['avatar_url'],
           'urls' => {
@@ -39,7 +39,7 @@ module OmniAuth
       end
 
       extra do
-        {:raw_info => raw_info}
+        {:raw_info => raw_info, :all_emails => emails}
       end
 
       def raw_info
@@ -52,8 +52,8 @@ module OmniAuth
       end
 
       def primary_email
-        primary = emails.find{|i| i['primary'] }
-        primary && primary['email'] || emails.first && emails.first['email']
+        primary = emails.find{ |i| i['primary'] && i['verified'] }
+        primary && primary['email'] || nil
       end
 
       # The new /user/emails API - http://developer.github.com/v3/users/emails/#future-response
