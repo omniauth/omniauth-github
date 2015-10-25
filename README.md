@@ -6,28 +6,34 @@ on the [GitHub Applications Page](https://github.com/settings/applications).
 
 ## Basic Usage
 
-    use OmniAuth::Builder do
-      provider :github, ENV['GITHUB_KEY'], ENV['GITHUB_SECRET']
-    end
+```ruby
+use OmniAuth::Builder do
+  provider :github, ENV['GITHUB_KEY'], ENV['GITHUB_SECRET']
+end
+```
 
 ## Github Enterprise Usage
 
-    provider :github, ENV['GITHUB_KEY'], ENV['GITHUB_SECRET'],
-        {
-          :client_options => {
-            :site => 'https://github.YOURDOMAIN.com/api/v3',
-            :authorize_url => 'https://github.YOURDOMAIN.com/login/oauth/authorize',
-            :token_url => 'https://github.YOURDOMAIN.com/login/oauth/access_token',
-          }
-        }
+```ruby
+provider :github, ENV['GITHUB_KEY'], ENV['GITHUB_SECRET'],
+    {
+      :client_options => {
+        :site => 'https://github.YOURDOMAIN.com/api/v3',
+        :authorize_url => 'https://github.YOURDOMAIN.com/login/oauth/authorize',
+        :token_url => 'https://github.YOURDOMAIN.com/login/oauth/access_token',
+      }
+    }
+```
 
 ## Scopes
 
 GitHub API v3 lets you set scopes to provide granular access to different types of data: 
 
-	use OmniAuth::Builder do
-      provider :github, ENV['GITHUB_KEY'], ENV['GITHUB_SECRET'], scope: "user,repo,gist"
-    end
+```ruby
+use OmniAuth::Builder do
+  provider :github, ENV['GITHUB_KEY'], ENV['GITHUB_SECRET'], scope: "user,repo,gist"
+end
+```
 
 More info on [Scopes](http://developer.github.com/v3/oauth/#scopes).
 
