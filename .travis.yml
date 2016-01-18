@@ -4,6 +4,6 @@ rvm:
 - 2.2
 
 before_install: gem update bundler
-before_script: bundle exec rake db:migrate
+before_script: bundle exec rake
 cache: bundler
 sudo: false
