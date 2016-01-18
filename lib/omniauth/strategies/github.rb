@@ -3,11 +3,9 @@ require 'omniauth-oauth2'
 module OmniAuth
   module Strategies
     class GitHub < OmniAuth::Strategies::OAuth2
-      option :client_options, {
-        :site => 'https://api.github.com',
-        :authorize_url => 'https://github.com/login/oauth/authorize',
-        :token_url => 'https://github.com/login/oauth/access_token'
-      }
+      option :client_options,         site: 'https://api.github.com',
+                                      authorize_url: 'https://github.com/login/oauth/authorize',
+                                      token_url: 'https://github.com/login/oauth/access_token'
 
       def request_phase
         super
@@ -15,10 +13,8 @@ module OmniAuth
 
       def authorize_params
         super.tap do |params|
-          %w[scope client_options].each do |v|
-            if request.params[v]
-              params[v.to_sym] = request.params[v]
-            end
+          %w(scope client_options).each do |v|
+            params[v.to_sym] = request.params[v] if request.params[v]
           end
         end
       end
@@ -33,13 +29,13 @@ module OmniAuth
           'image' => raw_info['avatar_url'],
           'urls' => {
             'GitHub' => raw_info['html_url'],
-            'Blog' => raw_info['blog'],
-          },
+            'Blog' => raw_info['blog']
+          }
         }
       end
 
       extra do
-        {:raw_info => raw_info, :all_emails => emails}
+        { raw_info: raw_info, all_emails: emails }
       end
 
       def raw_info
@@ -48,11 +44,11 @@ module OmniAuth
       end
 
       def email
-        (email_access_allowed?) ? primary_email : raw_info['email']
+        email_access_allowed? ? primary_email : raw_info['email']
       end
 
       def primary_email
-        primary = emails.find{ |i| i['primary'] && i['verified'] }
+        primary = emails.find { |i| i['primary'] && i['verified'] }
         primary && primary['email'] || nil
       end
 
@@ -60,7 +56,7 @@ module OmniAuth
       def emails
         return [] unless email_access_allowed?
         access_token.options[:mode] = :query
-        @emails ||= access_token.get('user/emails', :headers => { 'Accept' => 'application/vnd.github.v3' }).parsed
+        @emails ||= access_token.get('user/emails', headers: { 'Accept' => 'application/vnd.github.v3' }).parsed
       end
 
       def email_access_allowed?
