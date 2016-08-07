@@ -16,11 +16,9 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
   gem.version       = OmniAuth::GitHub::VERSION
 
-  gem.add_dependency 'omniauth', '~> 1.0'
-  # Nothing lower than omniauth-oauth2 1.1.1
-  # http://www.rubysec.com/advisories/CVE-2012-6134/
-  gem.add_dependency 'omniauth-oauth2', '>= 1.1.1', '< 2.0'
-  gem.add_development_dependency 'rspec', '~> 2.7'
+  gem.add_dependency 'omniauth', '~> 1.3.1'
+  gem.add_dependency 'omniauth-oauth2', '>= 1.4.0', '< 2.0'
+  gem.add_development_dependency 'rspec', '~> 3.5'
   gem.add_development_dependency 'rack-test'
   gem.add_development_dependency 'simplecov'
   gem.add_development_dependency 'webmock'
