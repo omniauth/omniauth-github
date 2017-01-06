@@ -6,7 +6,7 @@ on the [GitHub Applications Page](https://github.com/settings/applications).
 
 ## Basic Usage
 
-    use OmniAuth::Builder do
+    Rails.application.config.middleware.use OmniAuth::Builder do
       provider :github, ENV['GITHUB_KEY'], ENV['GITHUB_SECRET']
     end
 
@@ -25,8 +25,8 @@ on the [GitHub Applications Page](https://github.com/settings/applications).
 
 GitHub API v3 lets you set scopes to provide granular access to different types of data: 
 
-	use OmniAuth::Builder do
-      provider :github, ENV['GITHUB_KEY'], ENV['GITHUB_SECRET'], scope: "user,repo,gist"
+    Rails.application.config.middleware.use OmniAuth::Builder do
+      provider :github, ENV['GITHUB_KEY'], ENV['GITHUB_SECRET'], scope: "user:email"
     end
 
 More info on [Scopes](http://developer.github.com/v3/oauth/#scopes).
