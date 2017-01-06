@@ -64,9 +64,12 @@ module OmniAuth
       end
 
       def email_access_allowed?
-        return false unless options['scope']
         email_scopes = ['user', 'user:email']
-        scopes = options['scope'].split(',')
+
+        requested_scopes = []
+        requested_scopes += options['scope'].split(',') if options['scope']
+        requested_scopes += @env['omniauth.params']['scope'] if @env['omniauth.params']['scope']
+
         (scopes & email_scopes).any?
       end
     end
