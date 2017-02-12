@@ -135,6 +135,14 @@ describe OmniAuth::Strategies::GitHub do
     end
   end
 
+  context '#info.email' do
+    it 'should use any available email' do
+      allow(subject).to receive(:raw_info).and_return({})
+      allow(subject).to receive(:email).and_return('you@example.com')
+      expect(subject.info['email']).to eq('you@example.com')
+    end
+  end
+
   context '#info.urls' do
     it 'should use html_url from raw_info' do
       allow(subject).to receive(:raw_info).and_return({ 'login' => 'me', 'html_url' => 'http://enterprise/me' })
