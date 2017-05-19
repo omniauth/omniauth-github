@@ -69,6 +69,10 @@ module OmniAuth
         scopes = options['scope'].split(',')
         (scopes & email_scopes).any?
       end
+
+      def callback_url
+        full_host + script_name + callback_path
+      end
     end
   end
 end
