@@ -149,4 +149,13 @@ describe OmniAuth::Strategies::GitHub do
       expect(subject.info['urls']['GitHub']).to eq('http://enterprise/me')
     end
   end
+
+  describe '#callback_url' do
+    it 'is a combination of host, script name, and callback path' do
+      allow(subject).to receive(:full_host).and_return('https://example.com')
+      allow(subject).to receive(:script_name).and_return('/sub_uri')
+
+      expect(subject.callback_url).to eq('https://example.com/sub_uri/auth/github/callback')
+    end
+  end
 end
