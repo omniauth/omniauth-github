@@ -3,14 +3,24 @@ require 'omniauth-oauth2'
 module OmniAuth
   module Strategies
     class GitHub < OmniAuth::Strategies::OAuth2
+      DEFAULT_SCOPE = ""
+      
       option :client_options, {
         :site => 'https://api.github.com',
         :authorize_url => 'https://github.com/login/oauth/authorize',
         :token_url => 'https://github.com/login/oauth/access_token'
       }
+      
+      option :authorize_options, [ :scope ]
 
       def request_phase
         super
+      end
+      
+      def authorize_params
+        super.tap do |params|
+          params[:scope] ||= DEFAULT_SCOPE
+        end
       end
 
       def authorize_params
