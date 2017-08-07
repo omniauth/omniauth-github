@@ -10,4 +10,5 @@ group :development, :test do
   gem 'rb-fsevent'
   gem 'growl'
   gem 'rake'
+  gem 'byebug'
 end

@@ -1,79 +1,77 @@
 require 'omniauth-oauth2'
 
-module OmniAuth
-  module Strategies
-    class GitHub < OmniAuth::Strategies::OAuth2
-      option :client_options, {
-        :site => 'https://api.github.com',
-        :authorize_url => 'https://github.com/login/oauth/authorize',
-        :token_url => 'https://github.com/login/oauth/access_token'
+class OmniAuth::Strategies::GitHub < OmniAuth::Strategies::OAuth2
+  option :client_options, {
+    :site          => 'https://api.github.com',
+    :authorize_url => 'https://github.com/login/oauth/authorize',
+    :token_url     => 'https://github.com/login/oauth/access_token'
+  }
+
+  def authorize_params
+    key_value_pairs = super.map { |(k,v)| [k.to_sym, v] }
+    Hash[key_value_pairs]
+  end
+
+  uid { "#{raw_info['id']}" }
+
+  info do
+    {
+      'nickname' => raw_info['login'],
+      'email'    => email,
+      'name'     => raw_info['name'],
+      'image'    => raw_info['avatar_url'],
+      'urls'     => {
+        'GitHub' => raw_info['html_url'],
+        'Blog'   => raw_info['blog'],
       }
+    }
+  end
 
-      def request_phase
-        super
-      end
+  extra { { :raw_info => raw_info, :all_emails => emails } }
 
-      def authorize_params
-        super.tap do |params|
-          %w[scope client_options].each do |v|
-            if request.params[v]
-              params[v.to_sym] = request.params[v]
-            end
-          end
-        end
-      end
+  def email
+    email_access_allowed? ? primary_email : raw_info['email']
+  end
 
-      uid { raw_info['id'].to_s }
+  def raw_info
+    @raw_info ||= get_github_user_info
+  end
 
-      info do
-        {
-          'nickname' => raw_info['login'],
-          'email' => email,
-          'name' => raw_info['name'],
-          'image' => raw_info['avatar_url'],
-          'urls' => {
-            'GitHub' => raw_info['html_url'],
-            'Blog' => raw_info['blog'],
-          },
-        }
-      end
+  def primary_email
+    primary = emails.find { |i| i['primary'] && i['verified'] }
+    primary && primary['email'] || nil
+  end
 
-      extra do
-        {:raw_info => raw_info, :all_emails => emails}
-      end
+  # The new /user/emails API - http://developer.github.com/v3/users/emails/#future-response
+  def emails
+    @emails ||= email_access_allowed? ? get_github_user_emails : []
+  end
 
-      def raw_info
-        access_token.options[:mode] = :query
-        @raw_info ||= access_token.get('user').parsed
-      end
+  def email_access_allowed?
+    return false unless options['scope']
+    email_scopes = ['user', 'user:email']
+    scopes = options['scope'].split(',')
+    (scopes & email_scopes).any?
+  end
 
-      def email
-        (email_access_allowed?) ? primary_email : raw_info['email']
-      end
+  def callback_url
+    "#{full_host}#{script_name}#{callback_path}"
+  end
 
-      def primary_email
-        primary = emails.find{ |i| i['primary'] && i['verified'] }
-        primary && primary['email'] || nil
-      end
+  private
 
-      # The new /user/emails API - http://developer.github.com/v3/users/emails/#future-response
-      def emails
-        return [] unless email_access_allowed?
-        access_token.options[:mode] = :query
-        @emails ||= access_token.get('user/emails', :headers => { 'Accept' => 'application/vnd.github.v3' }).parsed
-      end
+  def get_github_user_info
+    get_github_info('user')
+  end
 
-      def email_access_allowed?
-        return false unless options['scope']
-        email_scopes = ['user', 'user:email']
-        scopes = options['scope'].split(',')
-        (scopes & email_scopes).any?
-      end
+  def get_github_user_emails
+    get_github_info('user/emails', 'Accept' => 'application/vnd.github.v3')
+  end
 
-      def callback_url
-        full_host + script_name + callback_path
-      end
-    end
+  def get_github_info(path, headers = {})
+    access_token.options[:mode] = :query
+    args = headers.empty? ? [path] : [path, :headers => headers]
+    access_token.get(*args).parsed
   end
 end
 

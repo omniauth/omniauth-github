@@ -1,65 +1,96 @@
 require 'spec_helper'
 
-describe OmniAuth::Strategies::GitHub do
-  let(:access_token) { instance_double('AccessToken', :options => {}) }
+RSpec.describe OmniAuth::Strategies::GitHub do
+  let(:access_token)    { instance_double('AccessToken', :options => {}) }
   let(:parsed_response) { instance_double('ParsedResponse') }
-  let(:response) { instance_double('Response', :parsed => parsed_response) }
+  let(:response)        { instance_double('Response', :parsed => parsed_response) }
 
   let(:enterprise_site)          { 'https://some.other.site.com/api/v3' }
   let(:enterprise_authorize_url) { 'https://some.other.site.com/login/oauth/authorize' }
   let(:enterprise_token_url)     { 'https://some.other.site.com/login/oauth/access_token' }
+  let(:enterprise_client_options) do
+    {
+      :site          => enterprise_site,
+      :authorize_url => enterprise_authorize_url,
+      :token_url     => enterprise_token_url
+    }
+  end
   let(:enterprise) do
-    OmniAuth::Strategies::GitHub.new('GITHUB_KEY', 'GITHUB_SECRET',
-        {
-            :client_options => {
-                :site => enterprise_site,
-                :authorize_url => enterprise_authorize_url,
-                :token_url => enterprise_token_url
-            }
-        }
-    )
+    described_class.new('KEY', 'SECRET', :client_options => enterprise_client_options)
   end
 
-  subject do
-    OmniAuth::Strategies::GitHub.new({})
-  end
+  subject { described_class.new({}) }
 
   before(:each) do
     allow(subject).to receive(:access_token).and_return(access_token)
   end
 
+  describe '#authorize_params' do
+    before do
+      allow_super_class = allow_any_instance_of(described_class.superclass)
+      allow_super_class.to receive(:session).and_return({})
+      allow_super_class.to receive(:authorize_params).and_return('foo' => 'bar')
+    end
+
+    it 'should symbolize the hash keys' do
+      expect(described_class.new({}).authorize_params).to eq(:foo => 'bar')
+    end
+  end
+
+  describe '#extra' do
+    let(:user)            { double(:user) }
+    let(:emails)          { double(:emails) }
+    let(:user_response)   { double(:user_response,   :parsed => user) }
+    let(:emails_response) { double(:emails_response, :parsed => emails) }
+
+    before do
+      allow(access_token).to receive(:get)
+      allow(access_token).to receive(:get).with('user/emails', any_args) { emails_response }
+      allow(access_token).to receive(:get).with(/^user$/) { user_response }
+      allow(subject).to receive(:options).and_return('scope' => 'user')
+    end
+
+    it 'should contain raw_info and all_emails' do
+      expect(subject.extra).to eq(:raw_info => user, :all_emails => emails)
+    end
+  end
+
   context 'client options' do
+    let(:client_options) { subject.options.client_options }
+
     it 'should have correct site' do
-      expect(subject.options.client_options.site).to eq('https://api.github.com')
+      expect(client_options.site).to eq('https://api.github.com')
     end
 
     it 'should have correct authorize url' do
-      expect(subject.options.client_options.authorize_url).to eq('https://github.com/login/oauth/authorize')
+      expect(client_options.authorize_url).to eq('https://github.com/login/oauth/authorize')
     end
 
     it 'should have correct token url' do
-      expect(subject.options.client_options.token_url).to eq('https://github.com/login/oauth/access_token')
+      expect(client_options.token_url).to eq('https://github.com/login/oauth/access_token')
     end
 
     describe 'should be overrideable' do
+      let(:overridden_options) { enterprise.options.client_options }
+
       it 'for site' do
-        expect(enterprise.options.client_options.site).to eq(enterprise_site)
+        expect(overridden_options.site).to eq(enterprise_site)
       end
 
       it 'for authorize url' do
-        expect(enterprise.options.client_options.authorize_url).to eq(enterprise_authorize_url)
+        expect(overridden_options.authorize_url).to eq(enterprise_authorize_url)
       end
 
       it 'for token url' do
-        expect(enterprise.options.client_options.token_url).to eq(enterprise_token_url)
+        expect(overridden_options.token_url).to eq(enterprise_token_url)
       end
     end
   end
 
   context '#email_access_allowed?' do
     it 'should not allow email if scope is nil' do
-      expect(subject.options['scope']).to be_nil
-      expect(subject).to_not be_email_access_allowed
+      subject.options['scope'] = nil
+      expect(subject).not_to be_email_access_allowed
     end
 
     it 'should allow email if scope is user' do
@@ -74,12 +105,12 @@ describe OmniAuth::Strategies::GitHub do
 
     it 'should not allow email if scope does not grant email access' do
       subject.options['scope'] = 'repo,user:follow'
-      expect(subject).to_not be_email_access_allowed
+      expect(subject).not_to be_email_access_allowed
     end
 
     it 'should assume email access not allowed if scope is something currently not documented' do
       subject.options['scope'] = 'currently_not_documented'
-      expect(subject).to_not be_email_access_allowed
+      expect(subject).not_to be_email_access_allowed
     end
   end
 
