@@ -31,7 +31,7 @@ module OmniAuth
           'email' => email,
           'name' => raw_info['name'],
           'image' => raw_info['avatar_url'],
-          'location' => raw_info['location']
+          'location' => raw_info['location'],
           'urls' => {
             'GitHub' => raw_info['html_url'],
             'Blog' => raw_info['blog'],
