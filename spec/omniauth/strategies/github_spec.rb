@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe OmniAuth::Strategies::GitHub do
-  let(:access_token) { instance_double('AccessToken', :options => {}) }
+  let(:access_token) { instance_double('AccessToken', :options => {}, :[] => 'user') }
   let(:parsed_response) { instance_double('ParsedResponse') }
   let(:response) { instance_double('Response', :parsed => parsed_response) }
 
@@ -147,6 +147,12 @@ describe OmniAuth::Strategies::GitHub do
     it 'should use html_url from raw_info' do
       allow(subject).to receive(:raw_info).and_return({ 'login' => 'me', 'html_url' => 'http://enterprise/me' })
       expect(subject.info['urls']['GitHub']).to eq('http://enterprise/me')
+    end
+  end
+
+  context '#extra.scope' do
+    it 'returns the scope on the returned access_token' do
+      expect(subject.scope).to eq('user')
     end
   end
 
