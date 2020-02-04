@@ -1,7 +1,5 @@
 # OmniAuth GitHub
 
-## OmniAuth is looking for a new home.  If you are interested in taking over this project please contact jason@mobomo.com
-
 This is the official OmniAuth strategy for authenticating to GitHub. To
 use it, you'll need to sign up for an OAuth2 Application ID and Secret
 on the [GitHub Applications Page](https://github.com/settings/applications).
