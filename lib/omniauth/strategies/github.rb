@@ -39,7 +39,7 @@ module OmniAuth
       end
 
       extra do
-        {:raw_info => raw_info, :all_emails => emails}
+        {:raw_info => raw_info, :all_emails => emails, :scope => scope }
       end
 
       def raw_info
@@ -49,6 +49,10 @@ module OmniAuth
 
       def email
         (email_access_allowed?) ? primary_email : raw_info['email']
+      end
+
+      def scope
+        access_token['scope']
       end
 
       def primary_email
