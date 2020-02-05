@@ -1,8 +1,16 @@
+![Ruby](https://github.com/omniauth/omniauth-github/workflows/Ruby/badge.svg?branch=master)
+
 # OmniAuth GitHub
 
 This is the official OmniAuth strategy for authenticating to GitHub. To
 use it, you'll need to sign up for an OAuth2 Application ID and Secret
 on the [GitHub Applications Page](https://github.com/settings/applications).
+
+## Installation
+
+```ruby
+gem 'omniauth-github', github: 'omniauth/omniauth-github', branch: 'master'
+```
 
 ## Basic Usage
 
