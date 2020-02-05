@@ -122,6 +122,12 @@ describe OmniAuth::Strategies::GitHub do
       expect(access_token).to receive(:get).with('user').and_return(response)
       expect(subject.raw_info).to eq(parsed_response)
     end
+
+    it 'should use the header auth mode' do
+      expect(access_token).to receive(:get).with('user').and_return(response)
+      subject.raw_info
+      expect(access_token.options[:mode]).to eq(:header)
+    end
   end
 
   context '#emails' do
@@ -132,6 +138,16 @@ describe OmniAuth::Strategies::GitHub do
 
       subject.options['scope'] = 'user'
       expect(subject.emails).to eq(parsed_response)
+    end
+
+    it 'should use the header auth mode' do
+      expect(access_token).to receive(:get).with('user/emails', :headers => {
+        'Accept' => 'application/vnd.github.v3'
+      }).and_return(response)
+
+      subject.options['scope'] = 'user'
+      subject.emails
+      expect(access_token.options[:mode]).to eq(:header)
     end
   end
 
