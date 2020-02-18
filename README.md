@@ -45,6 +45,11 @@ end
 
 More info on [Scopes](http://developer.github.com/v3/oauth/#scopes).
 
+
+## Semver
+This project adheres to Semantic Versioning 2.0.0. Any violations of this scheme are considered to be bugs. 
+All changes will be tracked [here](https://github.com/omniauth/omniauth-github/releases).
+
 ## License
 
 Copyright (c) 2011 Michael Bleigh and Intridea, Inc.
