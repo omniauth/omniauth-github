@@ -20,6 +20,18 @@ use OmniAuth::Builder do
 end
 ```
 
+
+## Basic Usage Rails
+
+In `config/initializers/github.rb`
+
+```ruby
+  Rails.application.config.middleware.use OmniAuth::Builder do
+    provider :github, ENV['GITHUB_KEY'], ENV['GITHUB_SECRET']
+  end
+```
+
+
 ## Github Enterprise Usage
 
 ```ruby
