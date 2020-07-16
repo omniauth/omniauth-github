@@ -43,7 +43,7 @@ use OmniAuth::Builder do
 end
 ```
 
-More info on [Scopes](http://developer.github.com/v3/oauth/#scopes).
+More info on [Scopes](https://docs.github.com/en/developers/apps/scopes-for-oauth-apps).
 
 
 ## Semver
