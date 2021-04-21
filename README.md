@@ -57,6 +57,86 @@ end
 
 More info on [Scopes](https://docs.github.com/en/developers/apps/scopes-for-oauth-apps).
 
+## Auth Hash
+
+Here's an example of an authentication hash available in the callback by accessing `request.env['omniauth.auth']`:
+```json
+{
+  "provider": "github",
+  "uid": "50639655",
+  "info": {
+    "nickname": "nejdetkadir",
+    "email": "nejdetkadir.550@gmail.com",
+    "name": "Nejdet Kadir Bektaş",
+    "image": "https://avatars.githubusercontent.com/u/50639655?v=4",
+    "urls": {
+      "GitHub": "https://github.com/nejdetkadir",
+      "Blog": "www.nejdetkadirbektas.com"
+    }
+  },
+  "credentials": {
+    "token": "token",
+    "expires": false
+  },
+  "extra": {
+    "raw_info": {
+      "login": "nejdetkadir",
+      "id": 50639655,
+      "node_id": "MDQ6VXNlcjUwNjM5NjU1",
+      "avatar_url": "https://avatars.githubusercontent.com/u/50639655?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/nejdetkadir",
+      "html_url": "https://github.com/nejdetkadir",
+      "followers_url": "https://api.github.com/users/nejdetkadir/followers",
+      "following_url": "https://api.github.com/users/nejdetkadir/following{/other_user}",
+      "gists_url": "https://api.github.com/users/nejdetkadir/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/nejdetkadir/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/nejdetkadir/subscriptions",
+      "organizations_url": "https://api.github.com/users/nejdetkadir/orgs",
+      "repos_url": "https://api.github.com/users/nejdetkadir/repos",
+      "events_url": "https://api.github.com/users/nejdetkadir/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/nejdetkadir/received_events",
+      "type": "User",
+      "site_admin": false,
+      "name": "Nejdet Kadir Bektaş",
+      "company": null,
+      "blog": "www.nejdetkadirbektas.com",
+      "location": "Samsun",
+      "email": null,
+      "hireable": null,
+      "bio": "Ruby on Rails, Javascript, GNU/Linux",
+      "twitter_username": null,
+      "public_repos": 88,
+      "public_gists": 0,
+      "followers": 46,
+      "following": 102,
+      "created_at": "2019-05-14T20:29:52Z",
+      "updated_at": "2021-04-21T02:37:32Z",
+      "private_gists": 0,
+      "total_private_repos": 18,
+      "owned_private_repos": 18,
+      "disk_usage": 207250,
+      "collaborators": 3,
+      "two_factor_authentication": true,
+      "plan": {
+        "name": "pro",
+        "space": 976562499,
+        "collaborators": 0,
+        "private_repos": 9999
+      }
+    },
+    "all_emails": [
+      {
+        "email": "nejdetkadir.550@gmail.com",
+        "primary": true,
+        "verified": true,
+        "visibility": "private"
+      }
+    ],
+    "scope": "public_repo,user"
+  }
+}
+```
 
 ## Semver
 This project adheres to Semantic Versioning 2.0.0. Any violations of this scheme are considered to be bugs. 
