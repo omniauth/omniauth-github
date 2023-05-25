@@ -9,7 +9,7 @@ on the [GitHub Applications Page](https://github.com/settings/applications).
 ## Installation
 
 ```ruby
-gem 'omniauth-github', '~> 1.4.0'
+gem 'omniauth-github', '~> 2.0.0'
 ```
 
 ## Basic Usage
