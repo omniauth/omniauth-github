@@ -9,7 +9,7 @@ on the [GitHub OAuth Apps Page](https://github.com/settings/developers).
 ## Installation
 
 ```ruby
-gem 'omniauth-github', github: 'omniauth/omniauth-github', branch: 'master'
+gem 'omniauth-github', '~> 2.0.0'
 ```
 
 ## Basic Usage
